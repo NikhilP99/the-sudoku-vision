@@ -1,5 +1,6 @@
 import argparse
 from cv2 import cv2
+from extractGrid import solve_and_print
 
 # setting up parser
 parser = argparse.ArgumentParser()
@@ -12,18 +13,24 @@ def video_mode():
     while(video.isOpened()):
         ret, frame = video.read()
         if ret == True:
-            gray = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
-
-            cv2.imshow("Video screen",gray)
-
+            solved = solve_and_print(frame)
+            cv2.imshow("Video screen",solved)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-
         else:
             break
 
     video.release()
     cv2.destroyAllWindows()
+
+def image_mode(filename):
+    image = cv2.imread(args.file)
+    if image is not None:
+        solved = solve_and_print(image)
+        cv2.imshow("image",image)
+        cv2.waitKey(0)
+    else:
+        raise IOError('Image not found')
 
 
 def main():
@@ -32,10 +39,7 @@ def main():
     if args.file == '':
         video_mode()
     else:
-        image = cv2.imread(args.file)
-        cv2.imshow("image",image)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        image_mode(args.file)
 
     cv2.destroyAllWindows()
 
