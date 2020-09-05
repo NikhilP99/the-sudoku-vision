@@ -1,6 +1,8 @@
 from cv2 import cv2
 import numpy as np
+from helpers import sort_corners, get_top_view
 
+cv2.namedWindow("warp")
 
 def sudoku_main(image):
 
@@ -11,11 +13,10 @@ def sudoku_main(image):
     corners = get_corners(sudoku_contour)
     if corners is None:
         return image
-
-    cv2.circle(image, (corners[0][0], corners[0][1]), 5, (255,0,0), thickness=3, lineType=8, shift=0)
-    cv2.circle(image, (corners[1][0], corners[1][1]), 5, (255,0,0), thickness=3, lineType=8, shift=0)
-    cv2.circle(image, (corners[2][0], corners[2][1]), 5, (255,0,0), thickness=3, lineType=8, shift=0)
-    cv2.circle(image, (corners[3][0], corners[3][1]), 5, (255,0,0), thickness=3, lineType=8, shift=0)
+    corners = sort_corners(corners)
+    
+    top_view = get_top_view(image, corners)
+    cv2.imshow("warp",top_view)
 
     return image
 
