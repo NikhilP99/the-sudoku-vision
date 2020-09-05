@@ -1,6 +1,6 @@
 import argparse
 from cv2 import cv2
-from extractGrid import solve_and_print
+from extractGrid import sudoku_main
 
 # setting up parser
 parser = argparse.ArgumentParser()
@@ -13,7 +13,7 @@ def video_mode():
     while(video.isOpened()):
         ret, frame = video.read()
         if ret == True:
-            solved = solve_and_print(frame)
+            solved = sudoku_main(frame)
             cv2.imshow("Video screen",solved)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
@@ -26,7 +26,7 @@ def video_mode():
 def image_mode(filename):
     image = cv2.imread(args.file)
     if image is not None:
-        solved = solve_and_print(image)
+        solved = sudoku_main(image)
         cv2.imshow("image",image)
         cv2.waitKey(0)
     else:
