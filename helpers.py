@@ -24,6 +24,7 @@ def get_top_view(image, corners, make_square=True):
     try:
         side = max(width, height)
         warped = cv2.resize(warped, (side,side), interpolation=cv2.INTER_CUBIC)
+        warped = cv2.resize(warped, (450,450), interpolation=cv2.INTER_CUBIC)
     except Exception as e:
         print(e)
 
