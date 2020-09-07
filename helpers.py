@@ -19,10 +19,12 @@ def get_top_view(image, corners, make_square=True):
     # perspective transformation matrix
     transformation_matrix = cv2.getPerspectiveTransform(corners, final)
     warped = cv2.warpPerspective(image, transformation_matrix, (width, height))
+    side = max(width, height)
+    if side < 200:
+        return None
 
     # make it a square
     try:
-        side = max(width, height)
         warped = cv2.resize(warped, (side,side), interpolation=cv2.INTER_CUBIC)
         warped = cv2.resize(warped, (450,450), interpolation=cv2.INTER_CUBIC)
     except Exception as e:
