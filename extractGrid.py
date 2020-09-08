@@ -3,6 +3,7 @@ import numpy as np
 import math
 import pytesseract as pt
 from helpers import sort_corners, get_top_view
+from sudokuSolver import solve
 
 # cv2.namedWindow("warp")
 cv2.namedWindow("top view")
@@ -22,29 +23,28 @@ def sudoku_main(image):
     top_view = get_top_view(image, corners)
     if top_view is None:
         return image
-    
-    grid = read_grid(top_view)
+
     cv2.imshow("top view",top_view)
-    original = [
-        [7, 4, 0, 0, 3, 0, 0, 1, 0],
-        [0, 1, 9, 0, 6, 8, 5, 0, 2],
-        [0, 0, 0, 0, 0, 4, 3, 0, 0],
-        [0, 5, 6, 3, 7, 0, 0, 0, 1],
-        [0, 0, 1, 8, 0, 0, 0, 9, 5],
-        [0, 9, 0, 0, 2, 0, 6, 0, 0],
-        [1, 0, 3, 4, 0, 7, 2, 0, 0],
-        [5, 0, 0, 2, 0, 0, 0, 0, 8],
-        [0, 8, 0, 0, 0, 1, 4, 7, 0]
-    ]
-    if grid is not None:
-        print(grid)
-        if original == grid:
-            print("True")
-        else: 
-            print("False")
+    sudoku = "740030010019068502000004300056370001001800095090020600103407200500200008080001470"
+    solved = solve(sudoku)
+    
+    empty_boxes = [[0 for j in range(9)] for i in range(9)]
+    k = 0
+    for i in range(9):
+        for j in range(9):
+            if sudoku[k] == '0':
+                empty_boxes[i][j] = 1
+            k = k + 1
+
+    # grid = read_grid(top_view)
+    # if grid is not None:
+    #     print(grid)
+    #     if original == grid:
+    #         print("True")
+    #     else: 
+    #         print("False")
         
     return image
-
 
 def read_grid(image):
 
