@@ -21,7 +21,7 @@ def get_top_view(image, corners, make_square=True):
     warped = cv2.warpPerspective(image, transformation_matrix, (width, height))
     side = max(width, height)
     if side < 200:
-        return None
+        return None, None, None
 
     # make it a square
     try:
@@ -30,7 +30,7 @@ def get_top_view(image, corners, make_square=True):
     except Exception as e:
         print(e)
 
-    return warped
+    return warped, transformation_matrix, (height,width)
 
 
 def sort_corners(corners):

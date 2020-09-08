@@ -112,7 +112,17 @@ def display(values):
 
 def solve(grid):
     solved = search(parse_grid(grid))
-    
+    solved_array = [[0 for j in range(9)] for i in range(9)]
+
+    k = 0
+    row = 'A'
+    col =  1
+    for key,val in solved:
+        solved_array[k//9][k%9] = int(solved[key + val])
+        k += 1
+
+    return solved_array
+
 
 def search(values):
     "Using depth-first search and propagation, try all possible values."

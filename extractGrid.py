@@ -5,12 +5,12 @@ import pytesseract as pt
 from helpers import sort_corners, get_top_view
 from sudokuSolver import solve
 
-# cv2.namedWindow("warp")
-cv2.namedWindow("top view")
-cv2.namedWindow("cropped")
+old = False
+solution = []
 
 def sudoku_main(image):
-
+    global old
+    global solution
     sudoku_contour = find_sudoku(image)
     if sudoku_contour is None:
         return image
@@ -20,13 +20,26 @@ def sudoku_main(image):
         return image
     corners = sort_corners(corners)
     
-    top_view = get_top_view(image, corners)
+    top_view, transformation_matrix, original_shape = get_top_view(image, corners)
     if top_view is None:
         return image
 
-    cv2.imshow("top view",top_view)
+    # grid = read_grid(top_view)
+    # if grid is not None:
+    #     print(grid)
+    #     if original == grid:
+    #         print("True")
+    #     else: 
+    #         print("False")
+
     sudoku = "740030010019068502000004300056370001001800095090020600103407200500200008080001470"
-    solved = solve(sudoku)
+    if old is False:
+        solved = solve(sudoku)
+        solution = solved
+        old = True
+    else:
+        solved = solution
+    
     
     empty_boxes = [[0 for j in range(9)] for i in range(9)]
     k = 0
@@ -36,14 +49,35 @@ def sudoku_main(image):
                 empty_boxes[i][j] = 1
             k = k + 1
 
-    # grid = read_grid(top_view)
-    # if grid is not None:
-    #     print(grid)
-    #     if original == grid:
-    #         print("True")
-    #     else: 
-    #         print("False")
+    written = write_solution(top_view,empty_boxes,solved)
+    resized = cv2.resize(top_view, (original_shape[1], original_shape[0]), interpolation=cv2.INTER_CUBIC)
+
+    warped = cv2.warpPerspective(resized, transformation_matrix,(image.shape[1],image.shape[0]),flags=cv2.WARP_INVERSE_MAP)
+    result = np.where(warped.sum(axis=-1,keepdims=True)!=0, warped, image)
         
+    return result
+
+def write_solution(image,empty_boxes,solved):
+    # Write grid on image
+    side = image.shape[0] // 9
+    for i in range(9):
+        for j in range(9):
+            if(empty_boxes[i][j] != 1):
+                continue               
+
+            text = str(solved[i][j])
+            offset = 0
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            (text_height, text_width), baseLine = cv2.getTextSize(text, font, fontScale=1, thickness=3)
+        
+            font_scale = 0.4 * side / max(text_height, text_width)
+            text_height *= font_scale
+            text_width *= font_scale
+            bottom_left_corner_x = side*j + math.floor((side - text_width) / 2) + offset
+            bottom_left_corner_y = side*(i+1) - math.floor((side - text_height) / 2) + offset
+            image = cv2.putText(image, text, (bottom_left_corner_x, bottom_left_corner_y), 
+                                                  font, font_scale, (0,255,0), thickness=3, lineType=cv2.LINE_AA)
+    
     return image
 
 def read_grid(image):
