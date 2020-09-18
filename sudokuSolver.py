@@ -1,5 +1,3 @@
-## Solve Every Sudoku Puzzle
-
 ## See http://norvig.com/sudoku.html
 
 ## Throughout this program we have:

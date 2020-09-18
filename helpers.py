@@ -1,7 +1,7 @@
 from cv2 import cv2
 import numpy as np
 
-
+''' Takes the corners of a contour and returns the square shaped top view i.e. perspective transform '''
 def get_top_view(image, corners, make_square=True):
 
     # get bounding box
@@ -33,6 +33,9 @@ def get_top_view(image, corners, make_square=True):
     return warped, transformation_matrix, (height,width)
 
 
+''' Sorts the corners in the order:
+    top left, top right, bottom left, bottom right
+'''
 def sort_corners(corners):
     rect = np.zeros((4, 2), dtype = "float32")
 

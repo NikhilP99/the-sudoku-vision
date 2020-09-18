@@ -27,14 +27,13 @@ def image_mode(filename):
     image = cv2.imread(args.file)
     if image is not None:
         solved = sudoku_main(image)
-        cv2.imshow("image",image)
+        cv2.imshow("image",solved)
         cv2.waitKey(0)
     else:
         raise IOError('Image not found')
 
 
 def main():
-
     # if the user has not specified a file to load, use the video input
     if args.file == '':
         video_mode()
