@@ -1,0 +1,5 @@
+numpy==1.26.0
+opencv-python==4.5.5.64
+packaging==23.2
+Pillow==10.0.1
+pytesseract==0.3.10

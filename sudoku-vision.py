@@ -24,7 +24,7 @@ def video_mode():
     cv2.destroyAllWindows()
 
 def image_mode(filename):
-    image = cv2.imread(args.file)
+    image = cv2.imread(filename)
     if image is not None:
         solved = sudoku_main(image)
         cv2.imshow("image",solved)
